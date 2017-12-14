@@ -11,12 +11,24 @@
     <div id="root"></div>
     <script type="text/babel">
 
-      const App = () => <h1>Hello, world1</h1>
+      let store = {
+        title: 'Yellow Deep'
+      }
 
-      ReactDOM.render(
-        <App/>,
-        document.getElementById('root')
-      );
+      const Header = () => <h1>{store.title}</h1>
+
+      const App = () => {
+
+        return <Header />
+      }
+
+      const render = () => {
+        ReactDOM.render(
+          <App />,
+          document.getElementById('root')
+      );}
+
+      render()
 
     </script>
   </body>
