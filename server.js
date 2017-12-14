@@ -5,11 +5,10 @@ const bodyParser = require('body-parser');
 var request = require('request');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var url = require('url');
 
 // load json data
 const data = require('./data/train-hsls.json');
-
-// spotify access tokens. part of project.
 
 const app = express();
 
@@ -23,25 +22,50 @@ var jsonParser = bodyParser.json();
 
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({
-    extended: false
+  extended: false
 });
 
 app.use(cookieParser());
 
-//---------------- catch-all
+//--------- serve a file
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './index.html'));
+var sendFile = function(res, filename) {
+  var filepath = path.join(process.cwd(), filename);
+
+  res.sendFile(filepath, function(err) {
+    if (err) {
+      console.log(err);
+      res.status(err.status).end();
+    } else {
+      console.log('Sent:', filename);
+    }
+  });
+};
+
+// --- routing
+
+//-- files
+
+app.get(/\.(js|css|png|jpg|html)$/, function(req, res) {
+  var uri = url.parse(req.url, true, false);
+
+  sendFile(res, uri.pathname);
 });
 
-//--------------- start listening
+// -- catch-all
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './index.html'));
+});
+
+// -- start listening
 
 app.listen(port, host, err => {
-    if (err) {
-        log(err);
+  if (err) {
+    log(err);
 
-        return;
-    }
+    return;
+  }
 
-    console.log('App is listening at http://%s:%s', host, port);
+  console.log('App is listening at http://%s:%s', host, port);
 });
