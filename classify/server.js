@@ -8,7 +8,8 @@ var cookieParser = require('cookie-parser')
 var url = require('url')
 
 // load json data
-const palettes = require('../data/train-palettes.json')
+const dataFile = '../data/train-palettes.json'
+const palettes = require(dataFile)
 
 const app = express()
 
@@ -60,6 +61,28 @@ app.get('/palettes', (req, res) => {
   })
 
   console.log('sent data')
+})
+
+//-- toggle selection
+// overwrites whole json file on each update
+
+app.post('/updateselection', jsonParser, (req, res) => {
+  const { id } = req.body
+
+  const palette = palettes.find(p => p.id === id)
+
+  if (palette) {
+    palette.selected = !palette.selected
+
+    fs.writeFile(dataFile, JSON.stringify(palettes, null, 4), function(err) {
+      if (err) {
+        console.error('Error writing data file', err)
+        res.json({ status: 'error', error: err })
+      } else {
+        res.json({ status: 'ok' })
+      }
+    })
+  }
 })
 
 // -- catch-all

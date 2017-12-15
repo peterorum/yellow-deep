@@ -21,6 +21,12 @@ h1 {
   width: 33%;
   padding: 3rem;
   box-sizing: border-box;
+  background: transparent;
+  border: 0;
+}
+
+.palette.selected {
+  outline: 1rem solid black;
 }
 
 .palette-color {
