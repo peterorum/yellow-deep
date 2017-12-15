@@ -24,6 +24,26 @@ const getJson = url => {
   )
 }
 
+//--- post selection
+
+const updateSelection = data => {
+  return (
+    fetch('/updateselection', {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      // return json
+      .then(response => response.json())
+      .catch(error => {
+        console.error('fetch error:', error)
+      })
+  )
+}
+
 //--- header
 
 const Header = () => <h1>{store.title}</h1>
@@ -50,7 +70,15 @@ class Palettes extends React.Component {
     return (
       <div className="palettes">
         {store.palettes.map(p => (
-          <div key={p.id} className="palette">
+          <button
+            key={p.id}
+            className={`palette ${p.selected ? 'selected' : ''}`}
+            onClick={() => {
+              p.selected = !p.selected
+              updateSelection({ id: p.id })
+              renderPage()
+            }}
+          >
             {p.colors.map(c => (
               <div
                 key={c.id}
@@ -61,7 +89,7 @@ class Palettes extends React.Component {
                 className="palette-color"
               />
             ))}
-          </div>
+          </button>
         ))}
       </div>
     )
