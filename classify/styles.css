@@ -1,0 +1,29 @@
+body {
+  font-family: Arial;
+}
+
+h1 {
+  text-align: center;
+}
+
+.palettes {
+  width: 80%;
+  margin: 0 auto;
+  flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.palette {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 33%;
+  padding: 3rem;
+  box-sizing: border-box;
+}
+
+.palette-color {
+  width: 33%;
+  padding-bottom: 33%;
+}
