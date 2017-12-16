@@ -33,3 +33,9 @@ h1 {
   width: 33%;
   padding-bottom: 33%;
 }
+
+@media print {
+  .palette.selected {
+    outline: 0;
+  }
+}

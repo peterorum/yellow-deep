@@ -2,7 +2,8 @@
 
 let store = {
   title: 'Yellow Deep',
-  palettes: []
+  palettes: [],
+  selectedOnly: true
 }
 
 //--- load json
@@ -69,28 +70,31 @@ class Palettes extends React.Component {
   render() {
     return (
       <div className="palettes">
-        {store.palettes.map(p => (
-          <button
-            key={p.id}
-            className={`palette ${p.selected ? 'selected' : ''}`}
-            onClick={() => {
-              p.selected = !p.selected
-              updateSelection({ id: p.id })
-              renderPage()
-            }}
-          >
-            {p.colors.map(c => (
-              <div
-                key={c.id}
-                style={{
-                  backgroundColor: `hsl(${c.h * 360}, ${c.s * 100}%, ${c.l *
-                    100}%)`
+        {store.palettes.map(
+          p =>
+            (!store.selectedOnly || p.selected) && (
+              <button
+                key={p.id}
+                className={`palette ${p.selected ? 'selected' : ''}`}
+                onClick={() => {
+                  p.selected = !p.selected
+                  updateSelection({ id: p.id })
+                  renderPage()
                 }}
-                className="palette-color"
-              />
-            ))}
-          </button>
-        ))}
+              >
+                {p.colors.map(c => (
+                  <div
+                    key={c.id}
+                    style={{
+                      backgroundColor: `hsl(${c.h * 360}, ${c.s * 100}%, ${c.l *
+                        100}%)`
+                    }}
+                    className="palette-color"
+                  />
+                ))}
+              </button>
+            )
+        )}
       </div>
     )
   }
