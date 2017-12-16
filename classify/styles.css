@@ -25,8 +25,8 @@ h1 {
   border: 0;
 }
 
-.palette.selected {
-  outline: 1rem solid black;
+.palettes:not(.selected-only) .palette.selected {
+  outline: 0.5rem solid black;
 }
 
 .palette-color {
@@ -34,8 +34,21 @@ h1 {
   padding-bottom: 33%;
 }
 
+.checkbox-container {
+  padding-bottom: 2rem;
+  text-align: center;
+}
+
 @media print {
-  .palette.selected {
-    outline: 0;
+  h1 {
+    display: none;
+  }
+
+  .no-print {
+    display: none;
+  }
+
+  .palette {
+    padding: 1rem;
   }
 }
