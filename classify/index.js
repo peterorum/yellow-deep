@@ -87,7 +87,7 @@ class Palettes extends React.Component {
           className={`palettes ${store.selectedOnly ? 'selected-only' : ''}`}
         >
           {store.palettes.map(
-            p =>
+            (p, i) =>
               (!store.selectedOnly || p.selected) && (
                 <button
                   key={p.id}
