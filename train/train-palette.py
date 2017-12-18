@@ -23,7 +23,7 @@ batch_size = 128
 # classes: 0 or 1
 num_classes = 2
 
-epochs = 20
+epochs = 50
 
 dataFile = '../data/train-palettes.json'
 
