@@ -22,9 +22,6 @@ for _ in range(0, 1000):
 
     palettes.append(palette)
 
-# train from
-# filename = '../data/train-palettes.json'
-
 # new palettes to auto-classify
 filename = '../data/new-palettes.json'
 

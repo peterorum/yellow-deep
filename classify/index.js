@@ -71,17 +71,20 @@ class Palettes extends React.Component {
     return (
       <div>
         <div className="checkbox-container no-print">
-          <input
-            id="selected-only"
-            type="checkbox"
-            value="selected-only"
-            checked={store.selectedOnly}
-            onChange={() => {
-              store.selectedOnly = !store.selectedOnly
-              renderPage()
-            }}
-          />
-          <label htmlFor="selected-only">Selected only</label>
+          <p>
+            <input
+              id="selected-only"
+              type="checkbox"
+              value="selected-only"
+              checked={store.selectedOnly}
+              onChange={() => {
+                store.selectedOnly = !store.selectedOnly
+                renderPage()
+              }}
+            />
+            <label htmlFor="selected-only">Selected only</label>
+          </p>
+          <p>{store.palettes.filter(p => p.selected).length} selections</p>
         </div>
         <div
           className={`palettes ${store.selectedOnly ? 'selected-only' : ''}`}
@@ -91,25 +94,26 @@ class Palettes extends React.Component {
               (!store.selectedOnly || p.selected) && (
                 <button
                   key={p.id}
-                  className={`palette page-break ${
-                    p.selected ? 'selected' : ''
-                  }`}
+                  className={`palette ${p.selected ? 'selected' : ''}`}
                   onClick={() => {
                     p.selected = !p.selected
                     updateSelection({ id: p.id })
                     renderPage()
                   }}
                 >
-                  {p.colors.map(c => (
-                    <div
-                      key={c.id}
-                      style={{
-                        backgroundColor: `hsl(${c.h * 360}, ${c.s *
-                          100}%, ${c.l * 100}%)`
-                      }}
-                      className="palette-color"
-                    />
-                  ))}
+                  <div className="palette-container">
+                    {p.colors.map(c => (
+                      <div
+                        key={c.id}
+                        style={{
+                          backgroundColor: `hsl(${c.h * 360}, ${c.s *
+                            100}%, ${c.l * 100}%)`
+                        }}
+                        className="palette-color"
+                      />
+                    ))}
+                    <h2 className="no-print">{i + 1}</h2>
+                  </div>
                 </button>
               )
           )}

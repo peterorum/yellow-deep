@@ -2069,7 +2069,8 @@
                 "id": "9716f1c6-e12e-11e7-9b4d-80e650086a8a"
             }
         ],
-        "id": "9716ed5c-e12e-11e7-b6f7-80e650086a8a"
+        "id": "9716ed5c-e12e-11e7-b6f7-80e650086a8a",
+        "selected": false
     },
     {
         "colors": [
@@ -9107,7 +9108,7 @@
             }
         ],
         "id": "97194ca8-e12e-11e7-bd80-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -9402,7 +9403,8 @@
                 "id": "97196a98-e12e-11e7-a6d3-80e650086a8a"
             }
         ],
-        "id": "97196618-e12e-11e7-8085-80e650086a8a"
+        "id": "97196618-e12e-11e7-8085-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -11765,7 +11767,8 @@
                 "id": "971a3a02-e12e-11e7-b694-80e650086a8a"
             }
         ],
-        "id": "971a358c-e12e-11e7-92dc-80e650086a8a"
+        "id": "971a358c-e12e-11e7-92dc-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -13420,7 +13423,8 @@
                 "id": "971accb8-e12e-11e7-9ae5-80e650086a8a"
             }
         ],
-        "id": "971ac86e-e12e-11e7-bbcf-80e650086a8a"
+        "id": "971ac86e-e12e-11e7-bbcf-80e650086a8a",
+        "selected": false
     },
     {
         "colors": [
@@ -18090,7 +18094,7 @@
             }
         ],
         "id": "971c56de-e12e-11e7-894a-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -18208,7 +18212,8 @@
                 "id": "971c6cb4-e12e-11e7-83bf-80e650086a8a"
             }
         ],
-        "id": "971c608c-e12e-11e7-b4cb-80e650086a8a"
+        "id": "971c608c-e12e-11e7-b4cb-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -22053,7 +22058,7 @@
             }
         ],
         "id": "971dbab0-e12e-11e7-bee6-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -23355,7 +23360,7 @@
             }
         ],
         "id": "971e29dc-e12e-11e7-b551-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -24361,7 +24366,7 @@
             }
         ],
         "id": "971e8050-e12e-11e7-a62c-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -26786,7 +26791,7 @@
             }
         ],
         "id": "971f5064-e12e-11e7-b149-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -26964,7 +26969,7 @@
             }
         ],
         "id": "971f5f50-e12e-11e7-bb2d-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -27555,7 +27560,7 @@
             }
         ],
         "id": "971f909c-e12e-11e7-b680-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -29918,7 +29923,7 @@
             }
         ],
         "id": "97205ffe-e12e-11e7-94fc-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -38797,7 +38802,7 @@
             }
         ],
         "id": "9723ac2c-e12e-11e7-9e6d-80e650086a8a",
-        "selected": true
+        "selected": false
     },
     {
         "colors": [
@@ -39210,7 +39215,8 @@
                 "id": "9723e0d4-e12e-11e7-bb33-80e650086a8a"
             }
         ],
-        "id": "9723dbc0-e12e-11e7-a993-80e650086a8a"
+        "id": "9723dbc0-e12e-11e7-a993-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -49563,7 +49569,8 @@
                 "id": "9727ae8a-e12e-11e7-ba77-80e650086a8a"
             }
         ],
-        "id": "9727a9f6-e12e-11e7-b26b-80e650086a8a"
+        "id": "9727a9f6-e12e-11e7-b26b-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -57377,7 +57384,8 @@
                 "id": "972aa900-e12e-11e7-8f5a-80e650086a8a"
             }
         ],
-        "id": "972aa498-e12e-11e7-a953-80e650086a8a"
+        "id": "972aa498-e12e-11e7-a953-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -57554,7 +57562,8 @@
                 "id": "972ab75e-e12e-11e7-b54a-80e650086a8a"
             }
         ],
-        "id": "972ab326-e12e-11e7-89f5-80e650086a8a"
+        "id": "972ab326-e12e-11e7-89f5-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -58207,7 +58216,8 @@
                 "id": "972af9c8-e12e-11e7-a06c-80e650086a8a"
             }
         ],
-        "id": "972af524-e12e-11e7-8791-80e650086a8a"
+        "id": "972af524-e12e-11e7-8791-80e650086a8a",
+        "selected": true
     },
     {
         "colors": [
@@ -59153,6 +59163,7 @@
                 "id": "972b4e46-e12e-11e7-ab7a-80e650086a8a"
             }
         ],
-        "id": "972b4a06-e12e-11e7-9314-80e650086a8a"
+        "id": "972b4a06-e12e-11e7-9314-80e650086a8a",
+        "selected": true
     }
 ]
