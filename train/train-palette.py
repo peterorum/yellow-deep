@@ -1,16 +1,29 @@
 #!/usr/local/bin/python3
 
-import tensorflow as tf
-import sys
+import keras
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
+
+import numpy as np
+np.random.seed(1)
+
+# import sys
 import json
-import os
+
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
+import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-NUM_STEPS = 1000
-MINIBATCH_SIZE = 100
+batch_size = 128
+
+# classes: 0 or 1
+num_classes = 2
+
+epochs = 20
 
 dataFile = '../data/train-palettes.json'
 
@@ -36,49 +49,59 @@ for palette in palettes:
 # pp.pprint(colors)
 
 # for each palette, [1] if selected, [0] if not
-good = [[(1.0 if p['selected'] else 0.0) if 'selected' in p else 0.0] for p in data]
-# pp.pprint(good)
+classifications = [[(1.0 if p['selected'] else 0.0) if 'selected' in p else 0.0] for p in data]
 
 # use first 80% for training
 count = len(colors)
 trainCount = int(count * 0.8)
+# validation & test count
+testCount = int(count * 0.1)
 
-train_colors = colors[0:trainCount]
-train_results = good[0:trainCount]
+x_train = np.array(colors[0:trainCount])
+x_validation = np.array(colors[-testCount * 2: -testCount])
+x_test = np.array(colors[-testCount:])
 
-test_colors = colors[-trainCount:]
-test_results = good[-trainCount:]
+y_train = np.array(classifications[0:trainCount])
+y_validation = np.array(classifications[-testCount * 2: -testCount])
+y_test = np.array(classifications[-testCount:])
 
-# inputs - None will be sample aize
-x = tf.placeholder(tf.float32, [None, 27])
-# expected results
-y = tf.placeholder(tf.float32, [None, 1])
+# x_train = x_train.reshape(trainCount, 27)
+# x_test = x_test.reshape(testCount, 27)
+# x_train = x_train.astype('float32')
+# x_test = x_test.astype('float32')
 
-# weights
-W = tf.Variable(tf.zeros([27, 1]))
+print(x_train.shape[0], 'train samples')
+print(x_validation.shape[0], 'validation samples')
+print(x_test.shape[0], 'test samples')
 
-# predicted result
-y_pred = tf.matmul(x, W)
+# convert class vectors to binary class matrices
+y_train = keras.utils.to_categorical(y_train, num_classes)
+y_validation = keras.utils.to_categorical(y_validation, num_classes)
+y_test = keras.utils.to_categorical(y_test, num_classes)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
-    logits=y_pred, labels=y))
+model = Sequential()
+model.add(Dense(512, activation='relu', input_shape=(27,)))
+model.add(Dropout(0.2))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(num_classes, activation='softmax'))
 
-gd_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+model.summary()
 
-correct_mask = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_mask, tf.float32))
+model.compile(loss='categorical_crossentropy',
+              optimizer=RMSprop(),
+              metrics=['accuracy'])
 
-with tf.Session() as sess:
+history = model.fit(x_train, y_train,
+                    batch_size=batch_size,
+                    epochs=epochs,
+                    verbose=1,
+                    validation_data=(x_validation, y_validation))
 
-    # train
-    sess.run(tf.global_variables_initializer())
+score = model.evaluate(x_test, y_test, verbose=0)
 
-    for _ in range(NUM_STEPS):
-        # batch_xs, batch_ys = tf_colors.next_batch(MINIBATCH_SIZE)
-        sess.run(gd_step, feed_dict={x: train_colors, y: train_results})
+# install h5py
+model.save('../models/palette.h5')
 
-    # test
-    ans = sess.run(accuracy, feed_dict={x: test_colors,
-                                        y: test_results})
-
-    print("Accuracy: {:.4}%".format(ans * 100))
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])

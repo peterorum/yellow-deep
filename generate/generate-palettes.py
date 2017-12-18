@@ -22,7 +22,11 @@ for _ in range(0, 1000):
 
     palettes.append(palette)
 
-# print(palettes)
+# train from
+# filename = '../data/train-palettes.json'
 
-with open('../data/train-palettes.json', 'w') as outfile:
+# new palettes to auto-classify
+filename = '../data/new-palettes.json'
+
+with open(filename, 'w') as outfile:
     json.dump(palettes, outfile)

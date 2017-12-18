@@ -25,6 +25,9 @@ h1 {
   border: 0;
 }
 
+.palette-container {
+}
+
 .palettes:not(.selected-only) .palette.selected {
   outline: 0.5rem solid black;
 }
