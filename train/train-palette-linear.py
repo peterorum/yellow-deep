@@ -1,5 +1,8 @@
 #!/usr/local/bin/python3
 
+# train using a simple linear regression.
+# assumes results are the product of the inputs and a weight matrix
+
 import tensorflow as tf
 import sys
 import json
@@ -10,6 +13,7 @@ pp = pprint.PrettyPrinter(indent=4)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 NUM_STEPS = 1000
+# batch sizes are usually 50-500
 MINIBATCH_SIZE = 100
 
 dataFile = '../data/train-palettes.json'
@@ -55,27 +59,41 @@ x = tf.placeholder(tf.float32, [None, 27])
 y = tf.placeholder(tf.float32, [None, 1])
 
 # weights
-W = tf.Variable(tf.zeros([27, 1]))
+w = tf.Variable(tf.zeros([27, 1]), name='weights')
 
 # predicted result
-y_pred = tf.matmul(x, W)
+y_pred = tf.matmul(x, w)
 
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
-    logits=y_pred, labels=y))
+# loss is mean squared error
+loss = tf.reduce_mean(tf.square(y - y_pred))
 
-gd_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+# cross entropy (a measure of similarity between two distributions)
+# is mainly for categorical data.
+# loss = tf.nn.softmax_cross_entropy_with_logits(logits=y_pred, labels=y)
+# cross_entropy = tf.reduce_mean(loss)
+
+learning_rate = 0.5
+
+optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+train = optimizer.minimize(loss)
 
 correct_mask = tf.equal(tf.argmax(y_pred, 1), tf.argmax(y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_mask, tf.float32))
 
+
 with tf.Session() as sess:
 
-    # train
+    # init
     sess.run(tf.global_variables_initializer())
 
-    for _ in range(NUM_STEPS):
+    # train
+    for step in range(NUM_STEPS):
         # batch_xs, batch_ys = tf_colors.next_batch(MINIBATCH_SIZE)
-        sess.run(gd_step, feed_dict={x: train_colors, y: train_results})
+        sess.run(train, feed_dict={x: train_colors, y: train_results})
+
+        if step % 100 == 0:
+            print(step, sess.run([w]))
+            # wb_.append(sess.run([w]))
 
     # test
     ans = sess.run(accuracy, feed_dict={x: test_colors,
