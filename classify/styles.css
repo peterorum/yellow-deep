@@ -15,9 +15,6 @@ h1 {
 }
 
 .palette {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   width: 33%;
   padding: 3rem;
   box-sizing: border-box;
@@ -26,6 +23,14 @@ h1 {
 }
 
 .palette-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.palette-container h2 {
+  text-align: center;
+  width: 100%;
 }
 
 .palettes:not(.selected-only) .palette.selected {

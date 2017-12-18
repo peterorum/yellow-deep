@@ -8,7 +8,8 @@ var cookieParser = require('cookie-parser')
 var url = require('url')
 
 // load json data
-const dataFile = '../data/train-palettes.json'
+// const dataFile = '../data/train-palettes.json'
+const dataFile = '../data/new-palettes.json'
 const palettes = require(dataFile)
 
 const app = express()
