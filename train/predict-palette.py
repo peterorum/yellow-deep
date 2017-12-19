@@ -22,9 +22,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # load trained model
 model = load_model('../models/palette.h5')
 
-# classes: 0 or 1
-num_classes = 2
-
 dataFile = '../data/new-palettes.json'
 
 data = json.load(open(dataFile))
@@ -54,12 +51,14 @@ prediction = model.predict(x_data)
 
 prediction = prediction.tolist()
 
-liked = len([1 for x in prediction if x[1] > x[0]])
+min_like = 0.2
+
+liked = len([1 for x in prediction if x[1] > min_like])  # x[0]])
 
 pp.pprint('predicted likes {:3.2f}%'.format(liked / len(data) * 100))
 
 for i in range(0, len(data)):
-    data[i]['selected'] = prediction[i][1] > prediction[i][0]
+    data[i]['selected'] = prediction[i][1] > min_like  # prediction[i][0]
 
 with open(dataFile, 'w') as outfile:
     json.dump(data, outfile)
