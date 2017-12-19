@@ -1,12 +1,12 @@
 #!/usr/local/bin/python3
 
 import keras
-from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras.optimizers import RMSprop
+from keras.layers import Dense, Dropout, Activation
+from keras.optimizers import SGD
 
 import numpy as np
+# repeat random numbers
 np.random.seed(1)
 
 # import sys
@@ -86,10 +86,13 @@ model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))
 
+# model.add(Dense(num_classes, activation='relu', input_shape=(27,)))
+# model.add(Activation('softmax'))
+
 model.summary()
 
 model.compile(loss='categorical_crossentropy',
-              optimizer=RMSprop(),
+              optimizer=SGD(),
               metrics=['accuracy'])
 
 history = model.fit(x_train, y_train,
