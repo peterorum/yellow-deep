@@ -45,6 +45,8 @@ for palette in palettes:
 
 x_data = np.array(colors)
 
+# predict
+
 prediction = model.predict(x_data)
 
 # print(prediction)

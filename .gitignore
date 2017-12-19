@@ -4,4 +4,5 @@ npm-debug.log
 npm-debug.log.*
 .tern-port
 *.sublime-*
-palette.h5
+models/
+logs/

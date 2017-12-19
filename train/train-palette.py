@@ -2,8 +2,10 @@
 
 import keras
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation
+from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
+# from keras import regularizers
+from keras.callbacks import TensorBoard
 
 import numpy as np
 # repeat random numbers
@@ -79,6 +81,10 @@ print(x_test.shape[0], 'test samples')
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
+callbacks = []
+# tensorboard --logdir=../logs
+callbacks.append(TensorBoard(log_dir='../logs', histogram_freq=0, write_graph=True, write_images=True))
+
 model = Sequential()
 
 # model.add(Dense(512, activation='relu', input_shape=(inputs_count,)))
@@ -109,12 +115,22 @@ history = model.fit(x_train, y_train,
                     batch_size=batch_size,
                     epochs=epochs,
                     verbose=1,
-                    validation_split=validation_split)
+                    validation_split=validation_split,
+                    callbacks=callbacks
+                    )
 
 score = model.evaluate(x_test, y_test, verbose=0)
 
-# install h5py
-model.save('../models/palette.h5')
-
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+# save
+
+# must install h5py
+# save model & weights for reloading
+model.save('../models/palette.h5')
+
+# save readable architecture
+with open('../models/palette.json', 'w') as outfile:
+    outfile.write(model.to_json())
+    outfile.close()
