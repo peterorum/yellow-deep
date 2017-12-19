@@ -33,7 +33,7 @@ h1 {
   width: 100%;
 }
 
-.palettes {
+.palettes .selected {
   outline: 0.5rem solid black;
 }
 
