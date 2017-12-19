@@ -3,6 +3,7 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
+from keras.layers.convolutional import Conv2D
 from keras.optimizers import RMSprop
 # from keras import regularizers
 from keras.callbacks import TensorBoard
@@ -11,7 +12,7 @@ import numpy as np
 # repeat random numbers
 np.random.seed(1)
 
-# import sys
+import sys
 import json
 
 import pprint
@@ -42,19 +43,14 @@ data = json.load(open(dataFile))
 # create list of lists of the hsl data
 # each item is an array of 27 numbers (9 x hsl)
 
-inputs_count = 27
+inputs_count = 9
 
 palettes = [p['colors'] for p in data]
 colors = []
 
 for palette in palettes:
-    # flatten 9x3 to 27x1
-    hsl = []
-
-    for c in palette:
-        hsl.append(c['h'])
-        hsl.append(c['s'])
-        hsl.append(c['l'])
+    # 9x3
+    hsl = [[c['h'], c['s'], c['l']] for c in palette]
 
     colors.append(hsl)
 
@@ -96,14 +92,17 @@ model = Sequential()
 # model.add(Dense(num_classes, activation='softmax'))
 
 # v1 baseline single-layer model. train 86% val 82% test 76%
-# model.add(Dense(num_classes, activation='softmax', input_shape=(inputs_count,)))
+# model.add(Dense(num_classes, activation='softmax', input_shape=(inputs_count, 3)))
 
 # v2 add hidden layers/ train 92% val 82% test 77%
-model.add(Dense(hidden, activation='relu', input_shape=(inputs_count,)))
-model.add(Dropout(dropout_keep_prob))
-model.add(Dense(hidden, activation='relu', input_shape=(inputs_count,)))
-model.add(Dropout(dropout_keep_prob))
-model.add(Dense(num_classes, activation='softmax'))
+# model.add(Dense(hidden, activation='relu', input_shape=(inputs_count, 3)))
+# model.add(Dropout(dropout_keep_prob))
+# model.add(Dense(hidden, activation='relu', input_shape=(inputs_count, 3)))
+# model.add(Dropout(dropout_keep_prob))
+# model.add(Dense(num_classes, activation='softmax'))
+
+# v3 convolution
+model.add(Conv2D(num_classes, (1, 1), activation='softmax', input_shape=(inputs_count, 3)))
 
 model.summary()
 
