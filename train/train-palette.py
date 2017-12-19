@@ -3,7 +3,7 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
-from keras.optimizers import RMSprop, SGD
+from keras.optimizers import RMSprop
 
 import numpy as np
 # repeat random numbers
@@ -18,7 +18,7 @@ pp = pprint.PrettyPrinter(indent=4)
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-batch_size = 128
+batch_size = 256
 
 # classes: 0 or 1
 num_classes = 2
@@ -28,6 +28,10 @@ epochs = 100
 validation_split = 0.2
 
 optimizer = RMSprop()
+
+hidden = 256
+
+dropout_keep_prob = 0.5
 
 dataFile = '../data/train-palettes.json'
 
@@ -88,9 +92,7 @@ model = Sequential()
 # v1 baseline single-layer model. train 86% val 82% test 76%
 # model.add(Dense(num_classes, activation='softmax', input_shape=(inputs_count,)))
 
-# v2 add hidden layers/ train 88% val 81% test 74%
-hidden = 128
-dropout_keep_prob = 0.5
+# v2 add hidden layers/ train 92% val 82% test 77%
 model.add(Dense(hidden, activation='relu', input_shape=(inputs_count,)))
 model.add(Dropout(dropout_keep_prob))
 model.add(Dense(hidden, activation='relu', input_shape=(inputs_count,)))
