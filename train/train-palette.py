@@ -49,10 +49,21 @@ palettes = [p['colors'] for p in data]
 colors = []
 
 for palette in palettes:
-    # 9x3
-    hsl = [[c['h'], c['s'], c['l']] for c in palette]
+    # want 1000x3x3x3
+    grid = []
 
-    colors.append(hsl)
+    for i in range(0, 3, 3):
+        hsl = []
+        c = palette[i]
+        hsl.append([[c['h'], c['s'], c['l']]])
+        c = palette[i + 1]
+        hsl.append([[c['h'], c['s'], c['l']]])
+        c = palette[i + 2]
+        hsl.append([[c['h'], c['s'], c['l']]])
+
+        grid.append(hsl)
+
+    colors.append(grid)
 
 # pp.pprint(colors)
 
@@ -70,8 +81,11 @@ x_test = np.array(colors[train_count:])
 y_train = np.array(classifications[0:train_count])
 y_test = np.array(classifications[train_count:])
 
+print(x_train.shape, 'train shape')
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
+
+sys.exit(0)
 
 # convert class vectors to binary class matrices
 y_train = keras.utils.to_categorical(y_train, num_classes)
