@@ -3,7 +3,7 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
-from keras.optimizers import SGD
+from keras.optimizers import RMSprop, SGD
 
 import numpy as np
 # repeat random numbers
@@ -24,6 +24,8 @@ batch_size = 128
 num_classes = 2
 
 epochs = 100
+
+optimizer = RMSprop()
 
 dataFile = '../data/train-palettes.json'
 
@@ -80,7 +82,10 @@ y_validation = keras.utils.to_categorical(y_validation, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
+
 model.add(Dense(512, activation='relu', input_shape=(27,)))
+model.add(Dropout(0.2))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.2))
@@ -92,7 +97,7 @@ model.add(Dense(num_classes, activation='softmax'))
 model.summary()
 
 model.compile(loss='categorical_crossentropy',
-              optimizer=SGD(),
+              optimizer=optimizer,
               metrics=['accuracy'])
 
 history = model.fit(x_train, y_train,
