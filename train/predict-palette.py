@@ -36,8 +36,8 @@ for palette in palettes:
     # 9x3
     hsl = [[c['h'], c['s'], c['l']] for c in palette]
 
-    # 3x3x3 to match display
-    colors.append([hsl[0:3], hsl[3:6], hsl[6:9]])
+    # 1x9x3
+    colors.append([hsl])
 
 x_data = np.array(colors)
 

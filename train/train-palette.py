@@ -8,6 +8,8 @@ from keras.optimizers import RMSprop
 # from keras import regularizers
 from keras.callbacks import TensorBoard
 
+import matplotlib.pyplot as plt
+
 import numpy as np
 # repeat random numbers
 np.random.seed(1)
@@ -46,8 +48,8 @@ data = json.load(open(dataFile))
 inputs_count = 9
 
 # palettes are 3 rows x 3 cols x 3 hsl
-rows = 3
-cols = 3
+rows = 1
+cols = 9
 channels = 3
 
 palettes = [p['colors'] for p in data]
@@ -57,8 +59,8 @@ for palette in palettes:
     # 9x3
     hsl = [[c['h'], c['s'], c['l']] for c in palette]
 
-    # 3x3x3 to match display
-    colors.append([hsl[0:3], hsl[3:6], hsl[6:9]])
+    # 3x3x3
+    colors.append([hsl])
 
 # pp.pprint(colors)
 
@@ -108,15 +110,24 @@ model = Sequential()
 # model.add(Dropout(dropout_keep_prob))
 # model.add(Dense(num_classes, activation='softmax'))
 
-# v3 convolution train 88% val 81% test 75%
-model.add(Conv2D(32, kernel_size=1, padding='same', input_shape=(rows, cols, channels)))
+# v3 convolution train 96% val 80% test 73%
+model.add(Conv2D(32, kernel_size=1, padding='valid', input_shape=(rows, cols, channels)))
 model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPooling2D(pool_size=(1, 1), strides=(1, 1)))
 # model.add(Dropout(0.25))
+
+model.add(Conv2D(64, kernel_size=1, padding='valid'))
+model.add(Activation('relu'))
+model.add(Conv2D(64, 1, 1))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(1, 1)))
+# model.add(Dropout(0.25))
+
 model.add(Flatten())
 model.add(Dense(512))
 model.add(Activation('relu'))
 # model.add(Dropout(0.5))
+
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
@@ -136,9 +147,6 @@ history = model.fit(x_train, y_train,
 
 score = model.evaluate(x_test, y_test, verbose=0)
 
-print('Test loss:', score[0])
-print('Test accuracy:', score[1])
-
 # save
 
 # must install h5py
@@ -149,3 +157,25 @@ model.save('../models/palette.h5')
 with open('../models/palette.json', 'w') as outfile:
     outfile.write(model.to_json())
     outfile.close()
+
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
+
+# list all data in history
+print(history.history.keys())
+# summarize history for accuracy
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
