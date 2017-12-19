@@ -2,8 +2,8 @@
 
 import keras
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras.layers.convolutional import Conv2D
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.optimizers import RMSprop
 # from keras import regularizers
 from keras.callbacks import TensorBoard
@@ -12,7 +12,7 @@ import numpy as np
 # repeat random numbers
 np.random.seed(1)
 
-import sys
+# import sys
 import json
 
 import pprint
@@ -45,25 +45,20 @@ data = json.load(open(dataFile))
 
 inputs_count = 9
 
+# palettes are 3 rows x 3 cols x 3 hsl
+rows = 3
+cols = 3
+channels = 3
+
 palettes = [p['colors'] for p in data]
 colors = []
 
 for palette in palettes:
-    # want 1000x3x3x3
-    grid = []
+    # 9x3
+    hsl = [[c['h'], c['s'], c['l']] for c in palette]
 
-    for i in range(0, 3, 3):
-        hsl = []
-        c = palette[i]
-        hsl.append([[c['h'], c['s'], c['l']]])
-        c = palette[i + 1]
-        hsl.append([[c['h'], c['s'], c['l']]])
-        c = palette[i + 2]
-        hsl.append([[c['h'], c['s'], c['l']]])
-
-        grid.append(hsl)
-
-    colors.append(grid)
+    # 3x3x3 to match display
+    colors.append([hsl[0:3], hsl[3:6], hsl[6:9]])
 
 # pp.pprint(colors)
 
@@ -84,8 +79,6 @@ y_test = np.array(classifications[train_count:])
 print(x_train.shape, 'train shape')
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
-
-sys.exit(0)
 
 # convert class vectors to binary class matrices
 y_train = keras.utils.to_categorical(y_train, num_classes)
@@ -115,8 +108,17 @@ model = Sequential()
 # model.add(Dropout(dropout_keep_prob))
 # model.add(Dense(num_classes, activation='softmax'))
 
-# v3 convolution
-model.add(Conv2D(num_classes, (1, 1), activation='softmax', input_shape=(inputs_count, 3)))
+# v3 convolution train 88% val 81% test 75%
+model.add(Conv2D(32, kernel_size=1, padding='same', input_shape=(rows, cols, channels)))
+model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+# model.add(Dropout(0.25))
+model.add(Flatten())
+model.add(Dense(512))
+model.add(Activation('relu'))
+# model.add(Dropout(0.5))
+model.add(Dense(num_classes))
+model.add(Activation('softmax'))
 
 model.summary()
 

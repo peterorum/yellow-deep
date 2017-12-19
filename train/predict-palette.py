@@ -33,15 +33,11 @@ palettes = [p['colors'] for p in data]
 colors = []
 
 for palette in palettes:
-    # flatten 9x3 to 27x1
-    hsl = []
+    # 9x3
+    hsl = [[c['h'], c['s'], c['l']] for c in palette]
 
-    for c in palette:
-        hsl.append(c['h'])
-        hsl.append(c['s'])
-        hsl.append(c['l'])
-
-    colors.append(hsl)
+    # 3x3x3 to match display
+    colors.append([hsl[0:3], hsl[3:6], hsl[6:9]])
 
 x_data = np.array(colors)
 
@@ -53,14 +49,13 @@ prediction = model.predict(x_data)
 
 prediction = prediction.tolist()
 
-min_like = 0.2
-
-liked = len([1 for x in prediction if x[1] > min_like])  # x[0]])
-
-pp.pprint('predicted likes {:3.2f}%'.format(liked / len(data) * 100))
+liked = len([1 for x in prediction if x[1] > x[0]])
 
 for i in range(0, len(data)):
-    data[i]['selected'] = prediction[i][1] > min_like  # prediction[i][0]
+    data[i]['selected'] = prediction[i][1] > prediction[i][0]
 
 with open(dataFile, 'w') as outfile:
     json.dump(data, outfile)
+    outfile.close()
+
+pp.pprint('predicted likes {:3.2f}%'.format(liked / len(data) * 100))
