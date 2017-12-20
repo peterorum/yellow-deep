@@ -1,54 +1,6 @@
-//--- store
-
-let store = {
-  title: 'Yellow Deep',
-  palettes: [],
-  selectedOnly: false,
-  data: 'training'
-}
-
-//--- load json
-
-const getJson = url => {
-  return (
-    fetch(url, {
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      // return json
-      .then(response => response.json())
-      .catch(error => {
-        console.error('fetch error:', url, error)
-      })
-  )
-}
-
-//--- post selection
-
-const updateSelection = data => {
-  return (
-    fetch('/update-selection', {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      // return json
-      .then(response => response.json())
-      .catch(error => {
-        console.error('fetch error:', error)
-      })
-  )
-}
-
 //--- header
 
-const Header = () => <h1>{store.title}</h1>
+const Header = () => <h1>Yellow Deep</h1>
 
 //--- data display
 
@@ -56,16 +8,68 @@ class Palettes extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      palettes: [],
+      selectedOnly: false,
+      data: 'training'
+    }
+
+    this.getData = this.getData.bind(this)
+    this.getJson = this.getJson.bind(this)
+    this.updateSelection = this.updateSelection.bind(this)
   }
 
   componentDidMount() {
     // get palettes
+    this.getData(this.state.data)
+  }
 
-    getJson('/palettes?data=train').then(json => {
-      store.palettes = json.palettes
-      renderPage()
+  //--- load json
+
+  getJson = (url, data) => {
+    return (
+      fetch(`${url}?data=${data}`, {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+        // return json
+        .then(response => response.json())
+        .catch(error => {
+          console.error('fetch error:', url, error)
+        })
+    )
+  }
+
+  // get new data when radio button changed
+
+  getData = data => {
+    this.setState({ data })
+
+    this.getJson('/palettes', data).then(json => {
+      this.setState({ palettes: json.palettes })
     })
+  }
+  //--- post selection
+
+  updateSelection = data => {
+    return (
+      fetch('/update-selection', {
+        method: 'post',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        // return json
+        .then(response => response.json())
+        .catch(error => {
+          console.error('fetch error:', error)
+        })
+    )
   }
 
   render() {
@@ -77,10 +81,9 @@ class Palettes extends React.Component {
               id="selected-only"
               type="checkbox"
               value="selected-only"
-              checked={store.selectedOnly}
+              checked={this.state.selectedOnly}
               onChange={() => {
-                store.selectedOnly = !store.selectedOnly
-                renderPage()
+                this.setState({ selectedOnly: !this.state.selectedOnly })
               }}
             />
             <label htmlFor="selected-only">Selected only</label>
@@ -92,11 +95,9 @@ class Palettes extends React.Component {
               id="data-training"
               type="radio"
               value="training"
-              checked={store.selectedOnly}
-              onChange={() => {
-                store.data = e.target.value
-
-                renderPage()
+              checked={this.state.data === 'training'}
+              onChange={e => {
+                this.getData(e.target.value)
               }}
             />
             <label htmlFor="data-training">Training</label>
@@ -104,26 +105,26 @@ class Palettes extends React.Component {
               id="data-new"
               type="radio"
               value="new"
-              checked={store.selectedOnly}
+              checked={this.state.data === 'new'}
               onChange={e => {
-                store.data = e.target.value
-
-                renderPage()
+                this.getData(e.target.value)
               }}
             />
             <label htmlFor="data-new">New</label>
           </div>
         </div>
         <div className="selections-count">
-          {store.palettes.filter(p => p.selected).length} selections out of{' '}
-          {store.palettes.length}
+          {this.state.palettes.filter(p => p.selected).length} selections out of{' '}
+          {this.state.palettes.length}
         </div>
         <div
-          className={`palettes ${store.selectedOnly ? 'selected-only' : ''}`}
+          className={`palettes ${
+            this.state.selectedOnly ? 'selected-only' : ''
+          }`}
         >
-          {store.palettes.map(
+          {this.state.palettes.map(
             (p, i) =>
-              (!store.selectedOnly || p.selected) && (
+              (!this.state.selectedOnly || p.selected) && (
                 <button
                   key={p.id}
                   className={`palette ${p.selected ? 'selected' : ''}`}
