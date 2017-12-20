@@ -45,14 +45,16 @@ x_data = np.array(colors)
 
 prediction = model.predict(x_data)
 
-# print(prediction)
+print(prediction)
 
 prediction = prediction.tolist()
 
-liked = len([1 for x in prediction if x[1] > x[0]])
+min_liked = 0.9
+
+liked = len([1 for x in prediction if x[1] > min_liked])  # x[0]])
 
 for i in range(0, len(data)):
-    data[i]['selected'] = prediction[i][1] > prediction[i][0]
+    data[i]['selected'] = prediction[i][1] > min_liked  # prediction[i][0]
 
 with open(dataFile, 'w') as outfile:
     json.dump(data, outfile)

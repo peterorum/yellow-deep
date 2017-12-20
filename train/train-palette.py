@@ -111,12 +111,12 @@ model = Sequential()
 # model.add(Dense(num_classes, activation='softmax'))
 
 # v3 convolution train 96% val 80% test 73%
-model.add(Conv2D(32, kernel_size=1, padding='valid', input_shape=(rows, cols, channels)))
+model.add(Conv2D(32, (1, 1), padding='valid', input_shape=(rows, cols, channels)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(1, 1), strides=(1, 1)))
 # model.add(Dropout(0.25))
 
-model.add(Conv2D(64, kernel_size=1, padding='valid'))
+model.add(Conv2D(64, (1, 1), padding='valid'))
 model.add(Activation('relu'))
 model.add(Conv2D(64, 1, 1))
 model.add(Activation('relu'))

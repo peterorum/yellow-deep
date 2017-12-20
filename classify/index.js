@@ -11,7 +11,7 @@ class Palettes extends React.Component {
     this.state = {
       palettes: [],
       selectedOnly: false,
-      data: 'training'
+      data: 'new'
     }
 
     this.getData = this.getData.bind(this)
@@ -130,7 +130,7 @@ class Palettes extends React.Component {
                   className={`palette ${p.selected ? 'selected' : ''}`}
                   onClick={() => {
                     p.selected = !p.selected
-                    updateSelection({ id: p.id })
+                    this.updateSelection({ id: p.id })
                     renderPage()
                   }}
                 >

@@ -12,8 +12,10 @@ var url = require('url')
 // const dataFile = '../data/red-green-palettes.json'
 const dataFile = '../data/new-palettes.json'
 
-const trainPalettes = require('../data/train-palettes.json')
 const newPalettes = require('../data/new-palettes.json')
+
+let trainPalettes = require('../data/train-palettes.json')
+trainPalettes = trainPalettes.slice(0, 1000)
 
 const app = express()
 
