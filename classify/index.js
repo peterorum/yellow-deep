@@ -3,7 +3,8 @@
 let store = {
   title: 'Yellow Deep',
   palettes: [],
-  selectedOnly: false
+  selectedOnly: false,
+  data: 'training'
 }
 
 //--- load json
@@ -29,7 +30,7 @@ const getJson = url => {
 
 const updateSelection = data => {
   return (
-    fetch('/updateselection', {
+    fetch('/update-selection', {
       method: 'post',
       headers: {
         Accept: 'application/json',
@@ -61,7 +62,7 @@ class Palettes extends React.Component {
   componentDidMount() {
     // get palettes
 
-    getJson('/palettes').then(json => {
+    getJson('/palettes?data=train').then(json => {
       store.palettes = json.palettes
       renderPage()
     })
@@ -70,8 +71,8 @@ class Palettes extends React.Component {
   render() {
     return (
       <div>
-        <div className="checkbox-container no-print">
-          <p>
+        <div className="options-container no-print">
+          <div>
             <input
               id="selected-only"
               type="checkbox"
@@ -83,8 +84,39 @@ class Palettes extends React.Component {
               }}
             />
             <label htmlFor="selected-only">Selected only</label>
-          </p>
-          <p>{store.palettes.filter(p => p.selected).length} selections</p>
+          </div>
+          <div>
+            {/* data type */}
+            Data :
+            <input
+              id="data-training"
+              type="radio"
+              value="training"
+              checked={store.selectedOnly}
+              onChange={() => {
+                store.data = e.target.value
+
+                renderPage()
+              }}
+            />
+            <label htmlFor="data-training">Training</label>
+            <input
+              id="data-new"
+              type="radio"
+              value="new"
+              checked={store.selectedOnly}
+              onChange={e => {
+                store.data = e.target.value
+
+                renderPage()
+              }}
+            />
+            <label htmlFor="data-new">New</label>
+          </div>
+        </div>
+        <div className="selections-count">
+          {store.palettes.filter(p => p.selected).length} selections out of{' '}
+          {store.palettes.length}
         </div>
         <div
           className={`palettes ${store.selectedOnly ? 'selected-only' : ''}`}

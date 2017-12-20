@@ -1,3 +1,0 @@
-#!/bin/sh
-
-nodemon -i data --exec python3 make-hsl.py

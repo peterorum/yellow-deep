@@ -28,7 +28,7 @@ batch_size = 256
 # classes: 0 or 1
 num_classes = 2
 
-epochs = 100
+epochs = 120
 
 validation_split = 0.2
 

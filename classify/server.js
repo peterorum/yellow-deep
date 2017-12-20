@@ -9,8 +9,11 @@ var url = require('url')
 
 // load json data
 // const dataFile = '../data/train-palettes.json'
+// const dataFile = '../data/red-green-palettes.json'
 const dataFile = '../data/new-palettes.json'
-const palettes = require(dataFile)
+
+const trainPalettes = require('../data/train-palettes.json')
+const newPalettes = require('../data/new-palettes.json')
 
 const app = express()
 
@@ -57,6 +60,20 @@ app.get(/\.(js|css|png|jpg|html)$/, function(req, res) {
 //-- data
 
 app.get('/palettes', (req, res) => {
+  // /palettes?data=train
+
+  var uri = url.parse(req.url, true, false)
+
+  const data = uri.query.data
+
+  let palettes
+
+  if (data === 'new') {
+    palettes = newPalettes
+  } else {
+    palettes = trainPalettes
+  }
+
   res.json({
     palettes
   })
@@ -67,7 +84,7 @@ app.get('/palettes', (req, res) => {
 //-- toggle selection
 // overwrites whole json file on each update
 
-app.post('/updateselection', jsonParser, (req, res) => {
+app.post('/update-selection', jsonParser, (req, res) => {
   const { id } = req.body
 
   const palette = palettes.find(p => p.id === id)
