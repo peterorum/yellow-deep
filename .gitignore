@@ -6,5 +6,4 @@ npm-debug.log.*
 *.sublime-*
 models/
 logs/
-data/new-palettes.json
 data/train-palettes.json
