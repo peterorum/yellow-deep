@@ -3,11 +3,11 @@
 # generate a json file of random hsl palettes.
 # each palette is 9 colours
 
-import numpy as np
 import json
 import uuid
 import time
 import datetime
+import numpy as np
 
 
 def color_is_ok(hue):

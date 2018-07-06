@@ -3,9 +3,9 @@
 # generate a json file of random hsl palettes.
 # each palette is 9 colours
 
-import numpy as np
 import json
 import uuid
+import numpy as np
 
 palettes = []
 
