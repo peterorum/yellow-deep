@@ -14,7 +14,7 @@ const dataFile = '../data/new-palettes.json'
 
 const newPalettes = require('../data/new-palettes.json')
 
-let trainPalettes = require('../data/train-palettes.json')
+let trainPalettes = require('../data/manually-selected-palettes.json')
 trainPalettes = trainPalettes.slice(0, 1000)
 
 const app = express()
