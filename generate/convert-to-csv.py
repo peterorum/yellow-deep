@@ -20,7 +20,13 @@ max_bins = 10
 
 bins = max_bins - 1  # rounding
 
+# load data
 palettes = [p['colors'] for p in data]
+
+# convert each full color into its binned string version
+# eg hsl 0.5, 0.5, 0.5 -> hsl-050-050-050, depending on the number of bins
+
+# each palette is an array of the strings
 
 color_bins = []
 
@@ -35,6 +41,8 @@ for palette in palettes:
 
 # now count occurences of each possible combination
 
+# create array of all possible colors
+
 bin_codes = [np.int(np.round(100 * b / (max_bins - 1))) for b in range(max_bins)]
 
 all_colors = []
@@ -45,19 +53,28 @@ for b1 in bin_codes:
             c = f'hsl-{b1:03d}-{b2:03d}-{b3:03d}'
             all_colors.append(c)
 
+# convert palettes into a count of how many of each color bin it has
+
 encoded_colors = []
 
 for cb in color_bins:
 
     dic = {}
 
+    # all possible colors
+
     for c in all_colors:
         dic[c] = 0
+
+    # count them
 
     for c in cb:
         dic[c] += 1
 
+    # store counted version
     encoded_colors.append(dic)
+
+# dump counted version to csv, with all colours as header
 
 csv_filename = '../data/manually-selected-palettes.csv'
 
