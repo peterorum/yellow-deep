@@ -7,3 +7,4 @@ npm-debug.log.*
 models/
 logs/
 data/train-palettes.json
+data/manually-selected-palettes.csv
