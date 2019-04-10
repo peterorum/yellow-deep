@@ -94,3 +94,5 @@ def convert_to_csv(file):
 
 convert_to_csv('manually-selected-palettes')
 convert_to_csv('test-palettes')
+convert_to_csv('rules-palettes')
+convert_to_csv('red-green-palettes')

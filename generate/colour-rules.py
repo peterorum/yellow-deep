@@ -1,4 +1,6 @@
-# generate a json file of random red or green palettes
+#!/usr/local/bin/python3
+
+# generate a json file of random hsl palettes.
 # each palette is 9 colours
 
 import json
@@ -21,7 +23,7 @@ start_time = time.time()
 
 palettes = []
 
-likes_required = 500
+likes_required = 5000
 
 selected_count = 0
 
@@ -30,8 +32,6 @@ while selected_count < likes_required:
 
     has_unacceptable_color = False
 
-    hue = 0 if np.random.uniform(0, 1) < 0.5 else 0.3
-
     max_s = 0
     min_s = 1
     max_l = 0
@@ -39,11 +39,11 @@ while selected_count < likes_required:
 
     for p in range(0, 9):
 
-        h = hue
+        h = np.random.uniform(0, 1)
         s = np.random.uniform(0, 1)
         l = np.random.uniform(0, 1)
 
-        has_unacceptable_color = has_unacceptable_color or h != 0
+        has_unacceptable_color = has_unacceptable_color or not color_is_ok(h)
 
         max_s = max(max_s, s)
         min_s = min(min_s, s)
@@ -60,7 +60,7 @@ while selected_count < likes_required:
 
     h_selected = not has_unacceptable_color
     s_selected = True  # max_s > 0.8
-    l_selected = True  # min_l < 0.1 and max_l > 0.9
+    l_selected = min_l < 0.1 and max_l > 0.9
 
     selected = h_selected and s_selected and l_selected
 
@@ -86,7 +86,7 @@ data = liked + disliked
 np.random.shuffle(data)
 
 # new palettes to auto-classify
-filename = '../data/red-green-palettes.json'
+filename = '../data/rules-palettes.json'
 
 with open(filename, 'w') as outfile:
     json.dump(data, outfile, indent=4)
