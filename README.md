@@ -1,1 +1,1 @@
-# Use tensorflow to generate colour palettes
+# Use machine learning to generate colour palettes

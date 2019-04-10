@@ -110,7 +110,7 @@ class Palettes extends React.Component {
                 this.getData(e.target.value)
               }}
             />
-            <label htmlFor="data-new">New</label>
+            <label htmlFor="data-new">Test</label>
           </div>
         </div>
         <div className="selections-count">

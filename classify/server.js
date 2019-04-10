@@ -8,11 +8,9 @@ var cookieParser = require('cookie-parser')
 var url = require('url')
 
 // load json data
-// const dataFile = '../data/train-palettes.json'
-// const dataFile = '../data/red-green-palettes.json'
-const dataFile = '../data/new-palettes.json'
+const dataFile = '../data/predictions.json'
 
-const newPalettes = require('../data/new-palettes.json')
+const testPalettes = require(dataFile)
 
 let trainPalettes = require('../data/manually-selected-palettes.json')
 trainPalettes = trainPalettes.slice(0, 1000)
@@ -71,7 +69,7 @@ app.get('/palettes', (req, res) => {
   let palettes
 
   if (data === 'new') {
-    palettes = newPalettes
+    palettes = testPalettes
   } else {
     palettes = trainPalettes
   }

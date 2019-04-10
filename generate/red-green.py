@@ -18,6 +18,7 @@ def color_is_ok(hue):
 
 # --- start
 
+
 start_time = time.time()
 
 palettes = []
@@ -85,7 +86,7 @@ data = liked + disliked
 np.random.shuffle(data)
 
 # new palettes to auto-classify
-filename = '../data/train-palettes.json'
+filename = '../data/red-green-palettes.json'
 
 with open(filename, 'w') as outfile:
     json.dump(data, outfile, indent=4)

@@ -6,5 +6,5 @@ npm-debug.log.*
 *.sublime-*
 models/
 logs/
-data/train-palettes.json
-data/manually-selected-palettes.csv
+data/*
+!data/manually-selected-palettes.json

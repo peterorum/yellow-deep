@@ -1,88 +1,96 @@
-#!/usr/local/bin/python3
-
 import numpy as np
 
 import json
 
-import sys
+import sys  # noqa
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-data_file = '../data/manually-selected-palettes.json'
 
-data = json.load(open(data_file))
+def convert_to_csv(file):
 
-# convert each palette to a csv of which colors it contains
+    json_file = f'../data/{file}.json'
+    csv_file = f'../data/{file}.csv'
 
-# how many divisions to divde each hsl into
+    data = json.load(open(json_file))
 
-max_bins = 10
+    # convert each palette to a csv of which colors it contains
 
-bins = max_bins - 1  # rounding
+    # how many divisions to divde each hsl into
 
-# load data
-palettes = [{'colors': p['colors'], 'selected': p['selected'] if 'selected' in p else False} for p in data]
+    max_bins = 10
 
-# convert each full color into its binned string version
-# eg hsl 0.5, 0.5, 0.5 -> hsl-050-050-050, depending on the number of bins
+    bins = max_bins - 1  # rounding
 
-# each palette is an array of the strings
+    # load data
+    palettes = [{'id': p['id'], 'colors': p['colors'], 'selected': p['selected'] if 'selected' in p else False} for p in data]
 
-color_bins = []
+    # convert each full color into its binned string version
+    # eg hsl 0.5, 0.5, 0.5 -> hsl-050-050-050, depending on the number of bins
 
-for palette in palettes:
-    hsl = [[c['h'], c['s'], c['l']] for c in palette['colors']]
+    # each palette is an array of the strings
 
-    hsl = [[int(np.round(np.round(x * bins) / bins * 100)) for x in color] for color in hsl]
+    color_bins = []
 
-    hsl = [f'hsl-{x[0]:03d}-{x[1]:03d}-{x[2]:03d}' for x in hsl]
+    for palette in palettes:
+        hsl = [[c['h'], c['s'], c['l']] for c in palette['colors']]
 
-    color_bins.append({'hsl': hsl, 'selected': palette['selected']})
+        hsl = [[int(np.round(np.round(x * bins) / bins * 100)) for x in color] for color in hsl]
 
-# now count occurences of each possible combination
+        hsl = [f'hsl-{x[0]:03d}-{x[1]:03d}-{x[2]:03d}' for x in hsl]
 
-# create array of all possible colors
+        color_bins.append({'id': palette['id'], 'hsl': hsl, 'selected': palette['selected']})
 
-bin_codes = [np.int(np.round(100 * b / (max_bins - 1))) for b in range(max_bins)]
+    # now count occurences of each possible combination
 
-all_colors = []
+    # create array of all possible colors
 
-for b1 in bin_codes:
-    for b2 in bin_codes:
-        for b3 in bin_codes:
-            c = f'hsl-{b1:03d}-{b2:03d}-{b3:03d}'
-            all_colors.append(c)
+    bin_codes = [np.int(np.round(100 * b / (max_bins - 1))) for b in range(max_bins)]
 
-# convert palettes into a count of how many of each color bin it has
+    all_colors = []
 
-encoded_colors = []
+    for b1 in bin_codes:
+        for b2 in bin_codes:
+            for b3 in bin_codes:
+                c = f'hsl-{b1:03d}-{b2:03d}-{b3:03d}'
+                all_colors.append(c)
 
-for cb in color_bins:
+    # convert palettes into a count of how many of each color bin it has
 
-    dic = {}
+    encoded_colors = []
 
-    # all possible colors
+    for cb in color_bins:
 
-    for c in all_colors:
-        dic[c] = 0
+        dic = {}
 
-    # count them
+        # all possible colors
 
-    for c in cb['hsl']:
-        dic[c] += 1
+        for c in all_colors:
+            dic[c] = 0
 
-    # store counted version
-    encoded_colors.append({'colors': dic, 'selected': cb['selected']})
+        # count them
 
-# dump counted version to csv, with all colours as header
+        for c in cb['hsl']:
+            dic[c] += 1
 
-csv_filename = '../data/manually-selected-palettes.csv'
+        # store counted version
+        encoded_colors.append({'id': cb['id'], 'colors': dic, 'selected': cb['selected']})
 
-with open(csv_filename, 'w') as outfile:
-    outfile.write('selected,')
-    outfile.writelines([','.join(all_colors), '\n'])
+    # dump counted version to csv, with all colours as header
 
-    for e in encoded_colors:
-        outfile.write('1,' if e['selected'] else '0,')
-        outfile.write(','.join(str(e['colors'][c]) for c in all_colors))
-        outfile.write('\n')
+    with open(csv_file, 'w') as outfile:
+        outfile.write('id,selected,')
+        outfile.writelines([','.join(all_colors), '\n'])
+
+        for e in encoded_colors:
+            outfile.write(f"{e['id']},")
+            outfile.write('1,' if e['selected'] else '0,')
+            outfile.write(','.join(str(e['colors'][c]) for c in all_colors))
+            outfile.write('\n')
+
+
+# --------main
+
+
+convert_to_csv('manually-selected-palettes')
+convert_to_csv('test-palettes')
