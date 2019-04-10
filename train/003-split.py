@@ -1,5 +1,5 @@
-# initial train
-# score 0.410
+# basic training
+# score 0.527
 # minimize score
 
 import json
