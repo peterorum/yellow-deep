@@ -100,6 +100,8 @@ app.post('/update-selection', jsonParser, (req, res) => {
         res.json({ status: 'ok' })
       }
     })
+  } else {
+    console.log('Palette not found. Voting on test?');
   }
 })
 
