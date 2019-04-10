@@ -113,7 +113,7 @@ class Palettes extends React.Component {
             <label htmlFor="data-new">Test</label>
           </div>
         </div>
-        <div className="selections-count">
+        <div className="selections-count no-print">
           {this.state.palettes.filter(p => p.selected).length} selections out of{' '}
           {this.state.palettes.length}
         </div>

@@ -75,4 +75,9 @@ h1 {
   .palette {
     padding: 1rem;
   }
+
+  .palettes .selected {
+    outline: none;
+  }
+
 }

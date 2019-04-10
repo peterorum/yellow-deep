@@ -102,7 +102,8 @@ def convert_to_csv(file):
     with open(csv_file, 'w') as outfile:
         outfile.write('id,selected,')
         outfile.writelines([','.join(all_colors)])
-        outfile.write(',h_std,s_std,l_std,s_avg,l_avg,s_min,l_min,s_max,l_max\n')
+        outfile.write(',h_std,s_std,l_std,s_avg,l_avg,s_min,l_min,s_max,l_max')
+        outfile.write('\n')
 
         for e in encoded_colors:
             outfile.write(f"{e['id']},")
@@ -110,7 +111,6 @@ def convert_to_csv(file):
             outfile.write(','.join(str(e['colors'][c]) for c in all_colors))
             outfile.write(f",{e['h_std']},{e['s_std']},{e['l_std']}")
             outfile.write(f",,{e['s_avg']},{e['l_avg']},{e['s_min']},{e['l_min']},{e['s_max']},{e['l_max']}")
-
             outfile.write('\n')
 
 

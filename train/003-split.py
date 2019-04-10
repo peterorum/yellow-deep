@@ -11,6 +11,7 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
 
 pd.options.display.float_format = '{:.4f}'.format
 pd.set_option('display.max_columns', None)
@@ -41,17 +42,15 @@ def evaluate(train, test, unique_id, target):
 
     lgb_model = lgb.LGBMClassifier(nthread=4, n_jobs=-1, verbose=-1, metric='rmse', objective='binary')
 
-    x_train = train.drop([target, unique_id], axis=1)
-    y_train = train[target]
-
-    x_test = test[x_train.columns]
+    x_train, x_test, y_train, y_test = train_test_split(train.drop(
+        [unique_id, target], axis=1), train[target], test_size=0.2, random_state=1)
 
     lgb_model.fit(x_train, y_train)
 
-    train_predictions = lgb_model.predict(x_train)
-    test_predictions = lgb_model.predict(x_test)
+    train_predictions = lgb_model.predict(x_test)
+    train_score = np.sqrt(mean_squared_error(train_predictions, y_test))
 
-    train_score = np.sqrt(mean_squared_error(train_predictions, y_train))
+    test_predictions = lgb_model.predict(test[x_train.columns])
 
     timer()
 
@@ -81,7 +80,7 @@ def run():
     test[target] = test_predictions
 
     # save predictions to csv
-    test.to_csv(f'../data/predictions.csv', index=False)
+    test[['id', 'selected']].to_csv('../data/predictions.csv', index=False)
 
     # save predictions back to json
     # assumes same sequence
