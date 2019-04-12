@@ -8,12 +8,20 @@ var cookieParser = require('cookie-parser')
 var url = require('url')
 
 // load json data
-const dataFile = '../data/predictions.json'
 
-const testPalettes = require(dataFile)
+// to view prediction results
+const testDataFile = '../data/predictions.json'
 
-let trainPalettes = require('../data/manually-selected-palettes.json')
-trainPalettes = trainPalettes.slice(0, 1000)
+// for adding more training
+// const testDataFile = '../data/test-palettes.json'
+
+const trainDataFile = '../data/manually-selected-palettes.json'
+
+const testPalettes = require(testDataFile)
+let trainPalettes = require(trainDataFile)
+
+// new data or training
+let mode
 
 const app = express()
 
@@ -64,11 +72,11 @@ app.get('/palettes', (req, res) => {
 
   var uri = url.parse(req.url, true, false)
 
-  const data = uri.query.data
+  mode = uri.query.data
 
   let palettes
 
-  if (data === 'new') {
+  if (mode === 'new') {
     palettes = testPalettes
   } else {
     palettes = trainPalettes
@@ -87,10 +95,14 @@ app.get('/palettes', (req, res) => {
 app.post('/update-selection', jsonParser, (req, res) => {
   const { id } = req.body
 
+  const palettes = mode === 'new' ? testPalettes : trainPalettes
+
   const palette = palettes.find(p => p.id === id)
 
   if (palette) {
     palette.selected = !palette.selected
+
+    const dataFile = mode === 'new' ? testDataFile : trainDataFile
 
     fs.writeFile(dataFile, JSON.stringify(palettes, null, 4), function(err) {
       if (err) {
@@ -101,7 +113,7 @@ app.post('/update-selection', jsonParser, (req, res) => {
       }
     })
   } else {
-    console.log('Palette not found. Voting on test?');
+    console.log('Palette not found. Voting on test?')
   }
 })
 

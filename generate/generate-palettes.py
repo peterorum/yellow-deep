@@ -27,3 +27,5 @@ filename = '../data/test-palettes.json'
 
 with open(filename, 'w') as outfile:
     json.dump(palettes, outfile, indent=4)
+
+print('now run convert-to-csv')
