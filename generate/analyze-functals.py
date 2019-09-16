@@ -85,7 +85,7 @@ for filename in files[0:5]:
         })
 
     # new palettes to auto-classify
-    json_filename = f'../hsl-json/hsl-{filename}.json' if is_ec2 else f'../data/hsl-json/hsl-{filename}.json'
+    json_filename = f'/data/hsl-json/hsl-{filename}.json' if is_ec2 else f'../data/hsl-json/hsl-{filename}.json'
 
     with open(json_filename, 'w') as outfile:
         json.dump(palette, outfile, indent=4)
