@@ -18,9 +18,14 @@ def convert_to_csv(file):
 
     # how many divisions to divde each hsl into
 
-    max_bins = 4
+    h_max_bins = 12
+    h_bins = h_max_bins - 1  # rounding
 
-    bins = max_bins - 1  # rounding
+    s_max_bins = 4
+    s_bins = s_max_bins - 1  # rounding
+
+    l_max_bins = 4
+    l_bins = l_max_bins - 1  # rounding
 
     # load data
     palettes = [{'id': p['id'], 'colors': p['colors'], 'selected': p['selected'] if 'selected' in p else False} for p in data]
@@ -35,7 +40,19 @@ def convert_to_csv(file):
     for palette in palettes:
         hsl = [[c['h'], c['s'], c['l']] for c in palette['colors']]
 
-        hsl = [[int(np.round(np.round(x * bins) / bins * 100)) for x in color] for color in hsl]
+        hsl = [[
+            int(np.round(np.round(color[0] * h_bins) / h_bins * 100)),
+            int(np.round(np.round(color[1] * s_bins) / s_bins * 100)),
+            int(np.round(np.round(color[2] * l_bins) / l_bins * 100))
+        ] for color in hsl]
+
+        # black, white, gray all same
+
+        if hsl[2] == 0 or hsl[2] == 100:
+            hsl = (0, 0, hsl[2])
+
+        if hsl[1] == 0:
+            hsl = (0, 0, hsl[2])
 
         hsl = [f'hsl-{x[0]:03d}-{x[1]:03d}-{x[2]:03d}' for x in hsl]
 
@@ -70,13 +87,15 @@ def convert_to_csv(file):
 
     # create array of all possible colors
 
-    bin_codes = [np.int(np.round(100 * b / (max_bins - 1))) for b in range(max_bins)]
+    h_bin_codes = [np.int(np.round(100 * b / (h_max_bins - 1))) for b in range(h_max_bins)]
+    s_bin_codes = [np.int(np.round(100 * b / (s_max_bins - 1))) for b in range(s_max_bins)]
+    l_bin_codes = [np.int(np.round(100 * b / (l_max_bins - 1))) for b in range(l_max_bins)]
 
     all_colors = []
 
-    for b1 in bin_codes:
-        for b2 in bin_codes:
-            for b3 in bin_codes:
+    for b1 in h_bin_codes:
+        for b2 in s_bin_codes:
+            for b3 in l_bin_codes:
                 c = f'hsl-{b1:03d}-{b2:03d}-{b3:03d}'
                 all_colors.append(c)
 
@@ -130,5 +149,6 @@ def convert_to_csv(file):
 
 convert_to_csv('manually-selected-palettes')
 convert_to_csv('test-palettes')
+convert_to_csv('functal-palettes')
 # convert_to_csv('rules-palettes')
 # convert_to_csv('red-green-palettes')

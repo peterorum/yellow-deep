@@ -22,7 +22,8 @@ warnings.filterwarnings(module='sklearn*', action='ignore', category=Deprecation
 
 zipext = ''
 train_file = 'manually-selected-palettes'
-test_file = 'test-palettes'
+# test_file = 'test-palettes'
+test_file = 'functal-palettes'
 
 start_time = time()
 last_time = time()

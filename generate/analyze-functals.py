@@ -5,56 +5,83 @@ import sys  # noqa
 from PIL import Image
 from utils import rgb2hsl
 import operator
+from os import listdir
+from os.path import isfile, join
+from pprint import pprint # noqa
 
-filename = 'functal-20171128160309946.jpg'
+functal_path = '../classify/functals'
 
-img = Image.open(f"../functals/{filename}")
+files = [f for f in listdir(functal_path) if isfile(join(functal_path, f))]
 
 # generated from functals
 palettes = []
 
-colors = img.getcolors(img.size[0] * img.size[1])
+for filename in files[0:100]:
 
-# convert to hsl
+    print(filename)
 
-hsls = []
+    img = Image.open(f"{functal_path}/{filename}")
 
-for color in colors:
-    (r, g, b) = color[1]
+    colors = img.getcolors(img.size[0] * img.size[1])
 
-    hsl = rgb2hsl((r, g, b))
+    # convert to hsl
 
-    hsls.append(hsl)
+    hsls = []
 
-# convert to bins & count
+    for color in colors:
+        (r, g, b) = color[1]
 
-max_bins = 4
-bins = max_bins - 1  # rounding
+        hsl = rgb2hsl((r, g, b))
 
-color_bins = dict()
+        hsls.append(hsl)
 
-for hsl in hsls:
-    hsl_binned = tuple([int(np.round(np.round(x * bins) / bins * 100)) for x in hsl])
-    color_bins[hsl_binned] = color_bins.get(hsl_binned, 0) + 1
+    # convert to bins & count
 
-# sort by count
-color_bins = sorted(color_bins.items(), key=operator.itemgetter(1), reverse=True)
+    h_max_bins = 12
+    h_bins = h_max_bins - 1  # rounding
 
-most_common = color_bins[0:9]
+    s_max_bins = 4
+    s_bins = s_max_bins - 1  # rounding
 
-# convert to palette
+    l_max_bins = 4
+    l_bins = l_max_bins - 1  # rounding
 
-palette = {'id': str(uuid.uuid1()), 'image': filename, 'colors': [], }
+    color_bins = dict()
 
-for p in range(0, 9):
-    palette['colors'].append({
-        'id': str(uuid.uuid1()),
-        'h': color_bins[p][0][0] / 100,
-        's': color_bins[p][0][1] / 100,
-        'l': color_bins[p][0][2] / 100
-    })
+    for hsl in hsls:
+        hsl_binned = (
+            int(np.round(np.round(hsl[0] * h_bins) / h_bins * 100)),
+            int(np.round(np.round(hsl[1] * s_bins) / s_bins * 100)),
+            int(np.round(np.round(hsl[2] * l_bins) / l_bins * 100)))
 
-palettes.append(palette)
+        # black, white, gray all same
+
+        if hsl_binned[2] == 0 or hsl_binned[2] == 100:
+            hsl_binned = (0, 0, hsl_binned[2])
+
+        if hsl_binned[1] == 0:
+            hsl_binned = (0, 0, hsl_binned[2])
+
+        color_bins[hsl_binned] = color_bins.get(hsl_binned, 0) + 1
+
+    # sort by count
+    color_bins = sorted(color_bins.items(), key=operator.itemgetter(1), reverse=True)
+
+    most_common = color_bins[0:9]
+
+    # convert to palette
+
+    palette = {'id': str(uuid.uuid1()), 'image': filename, 'colors': [], }
+
+    for p in range(0, 9):
+        palette['colors'].append({
+            'id': str(uuid.uuid1()),
+            'h': color_bins[p][0][0] / 100,
+            's': color_bins[p][0][1] / 100,
+            'l': color_bins[p][0][2] / 100
+        })
+
+    palettes.append(palette)
 
 # new palettes to auto-classify
 filename = '../data/functal-palettes.json'

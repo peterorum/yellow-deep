@@ -10,10 +10,10 @@ var url = require('url')
 // load json data
 
 // to view prediction results
-// const testDataFile = '../data/predictions.json'
+const testDataFile = '../data/predictions.json'
 
 // to view functals
-const testDataFile = '../data/functal-palettes.json'
+// const testDataFile = '../data/functal-palettes.json'
 
 // for adding more training
 // const testDataFile = '../data/test-palettes.json'
