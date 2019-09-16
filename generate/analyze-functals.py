@@ -16,12 +16,9 @@ functal_path = '/data/functal-images' if is_ec2 else '../classify/functals'
 
 files = [f for f in listdir(functal_path) if isfile(join(functal_path, f))]
 
-# generated from functals
-palettes = []
-
 count = 0
 
-for filename in files:
+for filename in files[0:5]:
     count = count + 1
 
     print(count, filename)
@@ -87,10 +84,8 @@ for filename in files:
             'l': color_bins[p][0][2] / 100
         })
 
-    palettes.append(palette)
+    # new palettes to auto-classify
+    json_filename = f'../hsl-json/hsl-{filename}.json' if is_ec2 else f'../data/hsl-json/hsl-{filename}.json'
 
-# new palettes to auto-classify
-filename = 'functal-palettes.json' if is_ec2 else '../data/functal-palettes.json'
-
-with open(filename, 'w') as outfile:
-    json.dump(palettes, outfile, indent=4)
+    with open(json_filename, 'w') as outfile:
+        json.dump(palette, outfile, indent=4)
