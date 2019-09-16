@@ -1,24 +1,30 @@
 import numpy as np
 import json
 import uuid
+import os
 import sys  # noqa
 from PIL import Image
 from utils import rgb2hsl
 import operator
 from os import listdir
 from os.path import isfile, join
-from pprint import pprint # noqa
+from pprint import pprint  # noqa
 
-functal_path = '../classify/functals'
+is_ec2 = os.environ['HOME'] == '/home/ec2-user'
+
+functal_path = '/data/functal-images' if is_ec2 else '../classify/functals'
 
 files = [f for f in listdir(functal_path) if isfile(join(functal_path, f))]
 
 # generated from functals
 palettes = []
 
-for filename in files[0:100]:
+count = 0
 
-    print(filename)
+for filename in files:
+    count = count + 1
+
+    print(count, filename)
 
     img = Image.open(f"{functal_path}/{filename}")
 
@@ -84,7 +90,7 @@ for filename in files[0:100]:
     palettes.append(palette)
 
 # new palettes to auto-classify
-filename = '../data/functal-palettes.json'
+filename = 'functal-palettes.json' if is_ec2 else '../data/functal-palettes.json'
 
 with open(filename, 'w') as outfile:
     json.dump(palettes, outfile, indent=4)
