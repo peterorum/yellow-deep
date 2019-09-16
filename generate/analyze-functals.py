@@ -18,7 +18,7 @@ files = [f for f in listdir(functal_path) if isfile(join(functal_path, f))]
 
 count = 0
 
-for filename in files[0:5]:
+for filename in files:
     count = count + 1
 
     print(count, filename)
