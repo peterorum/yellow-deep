@@ -10,7 +10,10 @@ var url = require('url')
 // load json data
 
 // to view prediction results
-const testDataFile = '../data/predictions.json'
+// const testDataFile = '../data/predictions.json'
+
+// to view functals
+const testDataFile = '../data/functal-palettes.json'
 
 // for adding more training
 // const testDataFile = '../data/test-palettes.json'
@@ -62,6 +65,7 @@ var sendFile = function(res, filename) {
 app.get(/\.(js|css|png|jpg|html)$/, function(req, res) {
   var uri = url.parse(req.url, true, false)
 
+  console.log(uri.pathname);
   sendFile(res, uri.pathname)
 })
 
