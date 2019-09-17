@@ -145,7 +145,7 @@ class Palettes extends React.Component {
                         className="palette-color"
                       />
                     ))}
-                    {p.image && <img className='image' src={`functals/${p.image}`} />}
+                    {p.image && <img className='image' src={`http://functal-images.s3.amazonaws.com/${p.image}`} />}
                     <h2 className="no-print">{i + 1}</h2>
                   </div>
                 </button>
