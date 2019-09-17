@@ -149,7 +149,7 @@ def load_json(file):
 
 json_path = '../data/hsl-json'
 
-files = [f for f in listdir(json_path) if isfile(join(json_path, f))]
+files = [f for f in listdir(json_path) if isfile(join(json_path, f)) and f.endswith('json')]
 
 palettes = []
 

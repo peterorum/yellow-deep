@@ -60,7 +60,6 @@ def evaluate(train, test, unique_id, target):
 
 # --------------------- run
 
-
 def run():
 
     unique_id = 'id'
@@ -71,6 +70,13 @@ def run():
     train = pd.read_csv(f'../data/{train_file}.csv{zipext}', index_col=False)
     test = pd.read_csv(f'../data/{test_file}.csv{zipext}', index_col=False)
     test_json = json.load(open(f'../data/{test_file}.json'))
+
+    # remove items in test that are also in train
+
+    train_ids = list(train.id)
+
+    test = test[~test.id.isin(train_ids)]
+    test_json = [x for x in test_json if x["id"] not in train_ids]
 
     # ----------
 
