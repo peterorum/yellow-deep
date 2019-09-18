@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd generate
+python3 combine-jsons.py
+python3 convert-to-csv.py
+cd ../train
+python3 003-split.py

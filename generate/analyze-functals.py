@@ -70,22 +70,23 @@ for filename in files:
     # sort by count
     color_bins = sorted(color_bins.items(), key=operator.itemgetter(1), reverse=True)
 
-    most_common = color_bins[0:9]
+    if len(color_bins) >= 9:
+        most_common = color_bins[0:9]
 
-    # convert to palette
+        # convert to palette
 
-    palette = {'id': str(uuid.uuid1()), 'image': filename, 'colors': [], }
+        palette = {'id': str(uuid.uuid1()), 'image': filename, 'colors': [], }
 
-    for p in range(0, 9):
-        palette['colors'].append({
-            'id': str(uuid.uuid1()),
-            'h': color_bins[p][0][0] / 100,
-            's': color_bins[p][0][1] / 100,
-            'l': color_bins[p][0][2] / 100
-        })
+        for p in range(0, 9):
+            palette['colors'].append({
+                'id': str(uuid.uuid1()),
+                'h': color_bins[p][0][0] / 100,
+                's': color_bins[p][0][1] / 100,
+                'l': color_bins[p][0][2] / 100
+            })
 
-    # new palettes to auto-classify
-    json_filename = f'/data/hsl-json/hsl-{filename}.json' if is_ec2 else f'../data/hsl-json/hsl-{filename}.json'
+        # new palettes to auto-classify
+        json_filename = f'/data/hsl-json/hsl-{filename}.json' if is_ec2 else f'../data/hsl-json/hsl-{filename}.json'
 
-    with open(json_filename, 'w') as outfile:
-        json.dump(palette, outfile, indent=4)
+        with open(json_filename, 'w') as outfile:
+            json.dump(palette, outfile, indent=4)
