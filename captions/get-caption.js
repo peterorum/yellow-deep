@@ -42,6 +42,10 @@ function getCaption(image) {
 //
         let caption = body.description && body.description.captions && body.description.captions.length && body.description.captions[0].text;
 
+        if (!caption && body.description && body.description.tags && body.description.tags.length) {
+          caption = body.description.tags[0];
+        }
+
         if (!caption) {
 
           reject(body);
