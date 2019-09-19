@@ -24,7 +24,22 @@ function getCaption(image) {
       if (error) {
         reject('api error', error);
       } else {
-        console.log(body);
+//
+//         { description:
+//            { tags:
+//               [ 'plane',
+//                 'large',
+//                 'boat',
+//                 'hanging',
+//                 'colorful',
+//                 'air',
+//                 'blue',
+//                 'umbrella',
+//                 'flying' ],
+//              captions: [ [Object] ] },
+//           requestId: 'ca2104a9-ac46-4d21-8f28-4d6e3ee77121',
+//           metadata: { width: 768, height: 1024, format: 'Jpeg' } }
+//
         let caption = body.description && body.description.captions && body.description.captions.length && body.description.captions[0].text;
 
         if (!caption) {
