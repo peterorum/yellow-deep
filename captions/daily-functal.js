@@ -2,6 +2,7 @@ const graph = require('fbgraph')
 
 const s3 = require('./s3-client')
 const getCaption = require('./get-caption').getCaption
+const twit = require('./tweet-media');
 
 // post to facebook
 
@@ -40,14 +41,28 @@ s3.list('functals').then(function(result) {
 
     const filename = filenames[Math.floor(Math.random() * filenames.length)]
 
-    const imageUrl = `https://functals.s3.amazonaws.com/${filename}`
+    const bucket = 'functals'
+
+    const imageUrl = `https://${bucket}.s3.amazonaws.com/${filename}`
 
     getCaption(imageUrl).then(
       caption => {
         console.log(`${imageUrl} ${caption}`)
 
         if (caption) {
-          posttofacebook(imageUrl, caption)
+          // posttofacebook(imageUrl, caption)
+
+          // download file to /tmp
+
+          const tmpFile  = '/tmp/functal.jpg';
+
+          s3.download(bucket, filename, tmpFile).then(function() {
+
+            twit.tweet(`"${caption}" #fractal #functal #digitalart`, tmpFile, function() {});
+
+          })
+
+
         }
       },
       err => console.error(err)
