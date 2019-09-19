@@ -11,3 +11,4 @@ data/*
 !data/manually-selected-palettes.json
 functals/
 copy-s3
+*.zip

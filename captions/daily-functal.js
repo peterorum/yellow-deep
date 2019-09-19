@@ -25,13 +25,12 @@ function posttofacebook(imageUrl, message) {
 
       // post to page photos
       graph.post('/' + fbpage.id + '/photos', post, function(err, res) {
-        console.log(res)
+        console.log('facebook', res)
 
         if (err) {
           console.log(err)
           reject(err)
-        }
-        else {
+        } else {
           resolve()
         }
       })
@@ -61,7 +60,7 @@ function posttotumblr(message, imageUrl) {
         reject(err)
       }
 
-      console.log(data)
+      console.log('tumblr', data)
       resolve()
     })
   })
@@ -69,39 +68,60 @@ function posttotumblr(message, imageUrl) {
 
 // get random image & caption
 
-s3.list('functals').then(function(result) {
-  if (result.count === 0) {
-    console.log('No files')
-  } else {
-    const filenames = result.files.map(f => f.Key)
+function dailyFunctal() {
+  return new Promise(function(resolve, reject) {
+    s3.list('functals').then(function(result) {
+      if (result.count === 0) {
+        console.log('No files')
+      } else {
+        const filenames = result.files.map(f => f.Key)
 
-    const filename = filenames[Math.floor(Math.random() * filenames.length)]
+        const filename = filenames[Math.floor(Math.random() * filenames.length)]
 
-    const bucket = 'functals'
+        const bucket = 'functals'
 
-    const imageUrl = `https://${bucket}.s3.amazonaws.com/${filename}`
+        const imageUrl = `https://${bucket}.s3.amazonaws.com/${filename}`
 
-    getCaption(imageUrl).then(
-      caption => {
-        console.log(`${imageUrl} ${caption}`)
+        getCaption(imageUrl).then(
+          caption => {
+            console.log(`${imageUrl} ${caption}`)
 
-        if (caption) {
-          const message = `"${caption}" #fractal #functal #digitalart`
+            if (caption) {
+              const message = `"${caption}" #fractal #functal #digitalart`
 
-          posttofacebook(imageUrl, message).then(() => {}, () => {})
+              posttofacebook(imageUrl, message).then(
+                () => {
+                  posttotumblr(message, imageUrl).then(
+                    () => {
+                      // download file to /tmp
 
-          posttotumblr(message, imageUrl).then(() => {}, () => {})
+                      const tmpFile = '/tmp/functal.jpg'
 
-          // download file to /tmp
+                      s3.download(bucket, filename, tmpFile).then(function() {
+                        twit.tweet(message, tmpFile).then(
+                          () => {
+                            resolve()
+                          },
+                          () => {
+                            reject()
+                          }
+                        )
+                      })
+                    },
+                    () => {}
+                  )
+                },
+                () => {}
+              )
+            } else {
+              reject('no caption')
+            }
+          },
+          err => console.error(err)
+        )
+      }
+    })
+  })
+}
 
-          const tmpFile = '/tmp/functal.jpg'
-
-          s3.download(bucket, filename, tmpFile).then(function() {
-            twit.tweet(message, tmpFile).then(() => {}, () => {})
-          })
-        }
-      },
-      err => console.error(err)
-    )
-  }
-})
+exports.dailyFunctal = dailyFunctal
