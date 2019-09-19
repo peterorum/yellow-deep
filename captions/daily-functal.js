@@ -8,23 +8,33 @@ const twit = require('./tweet-media')
 // post to facebook
 
 function posttofacebook(imageUrl, message) {
-  graph.setAccessToken(process.env.fb_df_access_token)
+  return new Promise(function(resolve, reject) {
+    graph.setAccessToken(process.env.fb_df_access_token)
 
-  // get page accounts
-  graph.get('me/accounts', function(err, res) {
-    const fbpage = res.data.find(p => p.name === 'Daily Functal')
+    // get page accounts
+    graph.get('me/accounts', function(err, res) {
+      const fbpage = res.data.find(p => p.name === 'Daily Functal')
 
-    // change access token to page's
-    graph.setAccessToken(fbpage.access_token)
+      // change access token to page's
+      graph.setAccessToken(fbpage.access_token)
 
-    var post = {
-      message,
-      url: imageUrl
-    }
+      var post = {
+        message,
+        url: imageUrl
+      }
 
-    // post to page photos
-    graph.post('/' + fbpage.id + '/photos', post, function(/*err, res*/) {
-      // console.log(res)
+      // post to page photos
+      graph.post('/' + fbpage.id + '/photos', post, function(err, res) {
+        console.log(res)
+
+        if (err) {
+          console.log(err)
+          reject(err)
+        }
+        else {
+          resolve()
+        }
+      })
     })
   })
 }
@@ -78,7 +88,7 @@ s3.list('functals').then(function(result) {
         if (caption) {
           const message = `"${caption}" #fractal #functal #digitalart`
 
-          posttofacebook(imageUrl, message)
+          posttofacebook(imageUrl, message).then(() => {}, () => {})
 
           posttotumblr(message, imageUrl).then(() => {}, () => {})
 
