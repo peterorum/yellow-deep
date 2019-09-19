@@ -1,13 +1,13 @@
 const graph = require('fbgraph')
+const tumblr = require('tumblr.js')
 
 const s3 = require('./s3-client')
 const getCaption = require('./get-caption').getCaption
-const twit = require('./tweet-media');
+const twit = require('./tweet-media')
 
 // post to facebook
 
-function posttofacebook(imageUrl, caption) {
-
+function posttofacebook(imageUrl, message) {
   graph.setAccessToken(process.env.fb_df_access_token)
 
   // get page accounts
@@ -17,8 +17,6 @@ function posttofacebook(imageUrl, caption) {
     // change access token to page's
     graph.setAccessToken(fbpage.access_token)
 
-    const message = `"${caption}" #fractal #functal #digitalart`
-
     var post = {
       message,
       url: imageUrl
@@ -27,6 +25,34 @@ function posttofacebook(imageUrl, caption) {
     // post to page photos
     graph.post('/' + fbpage.id + '/photos', post, function(/*err, res*/) {
       // console.log(res)
+    })
+  })
+}
+
+// tumblr
+
+function posttotumblr(message, imageUrl) {
+  return new Promise(function(resolve, reject) {
+    const tumblrClient = tumblr.createClient({
+      consumer_key: process.env.tumblr_df_consumer_key,
+      consumer_secret: process.env.tumblr_df_consumer_secret,
+      token: process.env.tumblr_df_token,
+      token_secret: process.env.tumblr_df_token_secret
+    })
+
+    var options = {
+      caption: message,
+      source: imageUrl
+    }
+
+    tumblrClient.createPhotoPost('functal', options, function(err, data) {
+      if (err) {
+        console.log(err)
+        reject(err)
+      }
+
+      console.log(data)
+      resolve()
     })
   })
 }
@@ -50,19 +76,19 @@ s3.list('functals').then(function(result) {
         console.log(`${imageUrl} ${caption}`)
 
         if (caption) {
-          // posttofacebook(imageUrl, caption)
+          const message = `"${caption}" #fractal #functal #digitalart`
+
+          posttofacebook(imageUrl, message)
+
+          posttotumblr(message, imageUrl).then(() => {}, () => {})
 
           // download file to /tmp
 
-          const tmpFile  = '/tmp/functal.jpg';
+          const tmpFile = '/tmp/functal.jpg'
 
           s3.download(bucket, filename, tmpFile).then(function() {
-
-            twit.tweet(`"${caption}" #fractal #functal #digitalart`, tmpFile, function() {});
-
+            twit.tweet(message, tmpFile).then(() => {}, () => {})
           })
-
-
         }
       },
       err => console.error(err)

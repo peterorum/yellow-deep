@@ -28,6 +28,7 @@
   "dependencies": {
     "fbgraph": "^1.4.4",
     "s3": "^4.4.0",
+    "tumblr.js": "^2.0.2",
     "twit": "^2.2.11"
   }
 }
