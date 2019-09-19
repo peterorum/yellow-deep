@@ -12,5 +12,7 @@ data.extend(train)
 
 selected = [x for x in data if x['selected']]
 
+print('#!/bin/sh')
+
 for x in selected:
-    print(f'aws s3 cp s3://functal-images/{x['image']} s3://functals/{x['image']} --acl public-read')
+    print(f"aws s3 cp s3://functal-images/{x['image']} s3://functals/{x['image']} --acl public-read")
