@@ -12,3 +12,4 @@ data/*
 functals/
 copy-s3
 *.zip
+*.code-workspace
